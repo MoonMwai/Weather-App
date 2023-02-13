@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOON WEATHER</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'Weather/weather.css' %}">
+</head>
+
+<body>
+    <div class="header">
+        <h1>MOON WEATHER</h1>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="city" id="input" placeholder="Enter city name">
+                <button id="search" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <main>        
+        {% for data in weather_data %}
+            <div class="weather">
+                <h2 id="city">{{ city_name }}</h2>
+                <div class="temp-box">
+                <img src="http://openweathermap.org/img/w/{{ data.icon }}.png" alt="" id="img">
+                <p id="temperature">{{ data.temperature }} °C</p>
+                </div>
+                <span id="clouds">{{ data.description }}</span>
+            </div>
+        {% endfor %}
+        <div class="divider1"></div>
+
+        <div class="forecstH">
+            <p class="cast-header">Upcoming forecast</p>
+            <div class="templist">
+                {% for data in three_hour_data|slice:":5" %}
+                    <div class="next">
+                        <div>
+                            <p class="time">{{ data.time }}</p>
+                            <p>{{ data.temperature }} °C</p>
+                        </div>
+                        <p class="desc">{{ data.description }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <div class="forecstD">
+        <div class="divider2"></div>
+        <p class="cast-header"> Next 4 days forecast</p>
+        <div class="weekF">
+            {% for stuff in five_day_weather_data|slice:":4" %}
+                <div class="dayF">
+                    <p class="date">{{ stuff.date_time }}</p>
+                    <p>{{ stuff.temperature }} °C</p>
+                    <p class="desc">{{ stuff.description }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
